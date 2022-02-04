@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      article {
+        border: 3px solid orange;
+        border-radius: 25px;
+      }
+
+      section {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+        gap: 50px;
+      }
+
+      body {
+        margin: 50px;
+      }
+
+      p,
+      h2 {
+        padding-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="data_personer"></section>
+    <template>
+      <article>
+        <img src="" alt="" />
+        <h2></h2>
+        <p class="email"></p>
+        <p class="billede"></p>
+      </article>
+    </template>
+
+    <script>
+      const url = "https://tema7database-8733.restdb.io/rest/personer?";
+
+      const options = {
+        headers: {
+          "x-apikey": "61fcf7ea3f215f310a37be6b",
+        },
+      };
+
+      async function hentData() {
+        console.log("hent data");
+        const response = await fetch(url, options);
+        const json = await response.json();
+        vis(json);
+      }
+
+      hentData();
+
+      function vis(personer) {
+        console.log(personer);
+
+        const data = document.querySelector("#data_personer");
+        const personerTemplate = document.querySelector("template");
+
+        //løber personlisten igennem og indsætter data i en template
+        personer.forEach((person) => {
+          // placer personer i HTML
+          let klon = personerTemplate.cloneNode(true).content;
+          klon.querySelector(
+            "h2"
+          ).textContent = `${person.fornavn}  ${person.efternavn}`;
+          klon.querySelector(".email").textContent = `E-mail: ${person.email}`;
+          klon.querySelector(".billede").textContent = person.profilbillede;
+          // kloner containeren
+          data.appendChild(klon);
+        });
+      }
+    </script>
+  </body>
+</html>
